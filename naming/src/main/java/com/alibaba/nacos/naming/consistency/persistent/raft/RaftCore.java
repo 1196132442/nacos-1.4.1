@@ -382,7 +382,7 @@ public class RaftCore implements Closeable {
 
         // if data should be persisted, usually this is true:
         if (KeyBuilder.matchPersistentKey(datum.key)) {
-            //N2：同步写实例数据到文件
+            // N2：同步写实例数据到文件
             raftStore.write(datum);
         }
 

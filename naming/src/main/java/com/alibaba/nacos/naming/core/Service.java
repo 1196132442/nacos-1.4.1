@@ -272,6 +272,7 @@ public class Service extends com.alibaba.nacos.api.naming.pojo.Service implement
         for (Map.Entry<String, List<Instance>> entry : ipMap.entrySet()) {
             //make every ip mine
             List<Instance> entryIPs = entry.getValue();
+            // N1：更新临时实例 入口
             clusterMap.get(entry.getKey()).updateIps(entryIPs, ephemeral);
         }
 
@@ -293,7 +294,7 @@ public class Service extends com.alibaba.nacos.api.naming.pojo.Service implement
      * Init service.
      */
     public void init() {
-        // N1：定时任务存放客户端心跳检查任务入口
+        // N1：定时任务存放客户端心跳检查任务 入口
         HealthCheckReactor.scheduleCheck(clientBeatCheckTask);
         for (Map.Entry<String, Cluster> entry : clusterMap.entrySet()) {
             entry.getValue().setService(this);

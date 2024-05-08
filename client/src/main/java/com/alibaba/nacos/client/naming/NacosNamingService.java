@@ -293,7 +293,7 @@ public class NacosNamingService implements NamingService {
     @Override
     public List<Instance> getAllInstances(String serviceName, String groupName, List<String> clusters,
             boolean subscribe) throws NacosException {
-        // N1：服务发现入口
+        // N1：服务发现 入口
         ServiceInfo serviceInfo;
         if (subscribe) {
             serviceInfo = hostReactor.getServiceInfo(NamingUtils.getGroupedName(serviceName, groupName),

@@ -42,26 +42,27 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class DistroProtocol {
-    
+
     private final ServerMemberManager memberManager;
-    
+
     private final DistroComponentHolder distroComponentHolder;
-    
+
     private final DistroTaskEngineHolder distroTaskEngineHolder;
-    
+
     private final DistroConfig distroConfig;
-    
+
     private volatile boolean isInitialized = false;
-    
+
     public DistroProtocol(ServerMemberManager memberManager, DistroComponentHolder distroComponentHolder,
             DistroTaskEngineHolder distroTaskEngineHolder, DistroConfig distroConfig) {
         this.memberManager = memberManager;
         this.distroComponentHolder = distroComponentHolder;
         this.distroTaskEngineHolder = distroTaskEngineHolder;
         this.distroConfig = distroConfig;
+        // N1：开启数据同步任务 入口
         startDistroTask();
     }
-    
+
     private void startDistroTask() {
         if (EnvUtil.getStandaloneMode()) {
             isInitialized = true;
@@ -70,14 +71,14 @@ public class DistroProtocol {
         startVerifyTask();
         startLoadTask();
     }
-    
+
     private void startLoadTask() {
         DistroCallback loadCallback = new DistroCallback() {
             @Override
             public void onSuccess() {
                 isInitialized = true;
             }
-            
+
             @Override
             public void onFailed(Throwable throwable) {
                 isInitialized = false;
@@ -86,16 +87,16 @@ public class DistroProtocol {
         GlobalExecutor.submitLoadDataTask(
                 new DistroLoadDataTask(memberManager, distroComponentHolder, distroConfig, loadCallback));
     }
-    
+
     private void startVerifyTask() {
         GlobalExecutor.schedulePartitionDataTimedSync(new DistroVerifyTask(memberManager, distroComponentHolder),
                 distroConfig.getVerifyIntervalMillis());
     }
-    
+
     public boolean isInitialized() {
         return isInitialized;
     }
-    
+
     /**
      * Start to sync by configured delay.
      *
@@ -105,7 +106,7 @@ public class DistroProtocol {
     public void sync(DistroKey distroKey, DataOperation action) {
         sync(distroKey, action, distroConfig.getSyncDelayMillis());
     }
-    
+
     /**
      * Start to sync data to all remote server.
      *
@@ -123,7 +124,7 @@ public class DistroProtocol {
             }
         }
     }
-    
+
     /**
      * Query data from specified server.
      *
@@ -143,7 +144,7 @@ public class DistroProtocol {
         }
         return transportAgent.getData(distroKey, distroKey.getTargetServer());
     }
-    
+
     /**
      * Receive synced distro data, find processor to process.
      *
@@ -159,7 +160,7 @@ public class DistroProtocol {
         }
         return dataProcessor.processData(distroData);
     }
-    
+
     /**
      * Receive verify data, find processor to process.
      *
@@ -175,7 +176,7 @@ public class DistroProtocol {
         }
         return dataProcessor.processVerifyData(distroData);
     }
-    
+
     /**
      * Query data of input distro key.
      *
@@ -191,7 +192,7 @@ public class DistroProtocol {
         }
         return distroDataStorage.getDistroData(distroKey);
     }
-    
+
     /**
      * Query all datum snapshot.
      *

@@ -304,7 +304,7 @@ public class HostReactor implements Closeable {
         if (failoverReactor.isFailoverSwitch()) {
             return failoverReactor.getService(key);
         }
-
+        // N2：获取客户端服务实例缓存信息
         ServiceInfo serviceObj = getServiceInfo0(serviceName, clusters);
 
         if (null == serviceObj) {

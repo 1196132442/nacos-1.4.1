@@ -75,7 +75,7 @@ public class ClientBeatCheckTask implements Runnable {
 
     @Override
     public void run() {
-        // N1：心跳检测机制入口
+        // N1：心跳检测机制 入口
         try {
             if (!getDistroMapper().responsible(service.getName())) {
                 return;

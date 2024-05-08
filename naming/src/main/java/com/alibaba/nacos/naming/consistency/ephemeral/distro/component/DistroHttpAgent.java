@@ -91,6 +91,7 @@ public class DistroHttpAgent implements DistroTransportAgent {
     @Override
     public DistroData getDatumSnapshot(String targetServer) {
         try {
+            // N2：从集群其他节点一次性同步所有数据
             byte[] allDatum = NamingProxy.getAllData(targetServer);
             return new DistroData(new DistroKey("snapshot", KeyBuilder.INSTANCE_LIST_KEY_PREFIX), allDatum);
         } catch (Exception e) {

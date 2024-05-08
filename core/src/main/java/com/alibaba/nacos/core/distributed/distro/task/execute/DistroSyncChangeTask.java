@@ -39,7 +39,7 @@ public class DistroSyncChangeTask extends AbstractDistroExecuteTask {
 
     @Override
     public void run() {
-        // N1：真正处理集群同步信息的入口  尽力过 2 个 BlockingQueue
+        // N1：真正处理集群同步信息的入口
         Loggers.DISTRO.info("[DISTRO-START] {}", toString());
         try {
             String type = getDistroKey().getResourceType();
